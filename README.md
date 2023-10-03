@@ -6,3 +6,6 @@
 
   ![NoDupes](https://github.com/motoaddict6/motoaddict6/assets/146842625/1ae4f943-e99e-4006-9220-6c5b0d7043c8)
 
+![RidetypebyRIDER](https://github.com/motoaddict6/motoaddict6/assets/146842625/0db0c99b-9ffb-4d10-915d-5d49635a50f2)
+
+![ridebyridertype1](https://github.com/motoaddict6/motoaddict6/assets/146842625/37eded8f-15cb-48f7-a4b2-9077006a2c3c)
