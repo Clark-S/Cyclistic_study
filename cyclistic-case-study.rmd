@@ -1,0 +1,277 @@
+
+# **Case Study 1 - Cyclistic Bike-Share**
+# **Scott Clark**
+# **28-09-2023**
+#
+#
+#
+# ---
+# **Introduction**
+# 
+# This case study will focus on Cyclistic, a bike-sharing company from Chicago. It will follow the 6 steps in the data analytics process: *Ask*, *Prepare*, *Process*, *Analyze*, *Share*, and *Act* in order to answer vital business questions.
+# 
+# Each step will include:
+# 
+# -   Guided questions
+# 
+# -   Key Tasks
+# 
+# -   Deliverables
+# ---
+# **About the Company**
+# 
+# Cyclistic is a successful bike-sharing company from Chicago. Their bike-sharing program has more than 5800 bicycles and 692 docking stations. They stand out from their competitors by offering multiple styles of bikes for those people with disabilities who cannot use standard two-wheel bicycles. Cyclistic has three payment tiers for riding:
+# 
+# -   Single-Ride Pass
+# 
+# -   Full-day Rider Pass
+# 
+# -   Annual Membership Pass
+# 
+# Single-Ride and Full-Day riders will be referred to as **Casual Riders** and Annual Membership riders will be referred to as **Cyclistic Members** for the purpose of this study.
+# 
+# Lily Moreno, the Director of Marketing, emphasizes that Cyclistic's future growth hinges on the optimization of annual memberships. This strategy is underpinned by the substantial profitability associated with annual members compared to casual riders. Moreno's approach focuses on targeting casual riders for conversion into annual members, leveraging the fact that they are already familiar with Cyclistic and have actively chosen it as their preferred mobility solution.
+# ---
+# **Ask**
+# 
+# Three questions will guide the future marketing program:
+# 
+# 1.  How do **Cyclistic Members** and **Casual Riders** use Cyclistic bikes differently?
+# 
+# 2.  Why would **Casual Riders** buy a Cyclistic Annual Membership?
+# 
+# 3.  How can Cyclistic use digital media to influence **Casual Riders** to become members?
+# 
+# **Key Task**:
+# 
+# -   Analyze the data and figure out how **Cyclistic Members** and **Casual Riders** use Cyclistic bikes differently.
+# 
+# **Deliverables**:
+# 
+# -   Clear statement of the business task:
+# 
+#     -   Show how **Cyclistic Members** and **Casual Riders** use Cyclistic bikes differently.
+# ---
+# **Prepare**
+# 
+# **Guiding Questions**
+# 
+# -   **How are you addressing licensing of the data?**
+# 
+# All data sources used come from Motivate International Inc. under this [license](https://divvybikes.com/data-license-agreement). There is no personal data included in the data set.
+# 
+# -   **How is the data organized?**
+# 
+# The data is in the form of .zip files containing the .csv data spreadsheets. It has been downloaded from the trips_data folder by month and each months data is stored in a subfolder named yyyymm_trip_dat as yyyymm_trip_data.csv.
+# 
+# We have downloaded the data for all of 2022, but RstudioCloud doesn't have enough memory to run the entire year of 2022. That being the case we are using the initial 6 months of the year. The data is consistent across all sheets. The sheets tell us:
+# 
+# 1.  Ride ID
+# 
+# 2.  Rideable Type
+# 
+# 3.  Start and End Time
+# 
+# 4.  Start and End Location Name and ID, along with longitude and latitude.
+# 
+# 5.  Payment Plan Type (**Cyclistic Member** or **Casual Rider**)
+# 
+# -   **How did you verify the data integrity?**
+# 
+# The data was opened and examined in spreadsheets to see that all the data sets have consistent column names and data types.
+# 
+# -   **How does it help answer your questions?**
+# 
+# The data is well organized and can provide insights into total ride time, ridership type, and highest and lowest ride dates. This should be sufficient to see trends in both rider categories.
+# 
+# -   **Are there any problems with the data?**
+# 
+# In sorting the data we see that in the start station name, end station name, ID, longitude and latitude columns there is data missing. There is also start_station_name and \_end_station_name that have *Warehouse* and *Test Check* in them which will have to be removed.
+# 
+# **Key Tasks**
+# 
+# -   Downloaded data and stored it appropriately
+# 
+# -   Identify how it is organized
+# 
+# -   Sort and filter data
+# 
+# -   Determine credibility of data
+# 
+# **Deliverable**
+# 
+# -   Description of all data sources used, licenses, and any issues that arose when sorting and filtering.
+# ---
+# **Process**
+# 
+# **Guided Question**:
+# 
+# -   **What tools are you choosing and why?**
+# 
+# I will be using Excel to clean and sort the data in individual files, which will then be uploaded into BigQuery to be queried and analyzed. We have to use BigQuery to handle the amount of rows that are created after combining the data sets as Excel can only handle up to 1,000,000 rows.
+# 
+# -   **Have you ensured your data integrity**
+# 
+# The data is consistent across all sheets, and was provided from a first hand source so we know it is accurate.
+# 
+# -   **What steps have you taken to ensure your data is clean**
+# 
+# We noticed in the **Prepare** stage that there was values in start_station_name and end_station_name that have *Warehouse*, and *Test Check* in them. We filtered the columns to display those specific strings, and then removed those rows from the sheets.
+# 
+# We created a new column called **ride_length**, and used the columns *ended_at - started_at* to calculate overall ride time for the new column.
+# 
+# We then created another new column called **ride_day** and used the function *=WEEKDAY(column,value)* to populate the column with the numbers 1-7. Note 1 = Sunday and 7 = Saturday.
+# 
+# We do not need to use the *start_lng, end_lng, start_lat and end_lat* columns so they are also removed to make for a cleaner data set to work with. A copy is saved before removing these columns as they could be used for mapping projects at a later date.
+# 
+# Inspected the data to make sure there was no duplicate rows.
+# 
+# We proceeded to save each .csv file as a copy to maintain the original and so they could be imported into SQL for querying. We then ran a SQL query to combine the data tables into one combined data table.
+# 
+# ![](https://user-images.githubusercontent.com/146842625/272262562-c68f649a-28e2-4e97-95aa-5afe484d5490.png){width="290"}
+# 
+# 
+# The 12 data sets are now combined under the new header *2022_combined_trip_data*
+# 
+# We can now run a query to check the combined data set for duplicates.
+# 
+# 
+# ![](https://user-images.githubusercontent.com/146842625/272267820-2ef119bc-3976-425d-a1dd-98ccd91d67a5.png){width="460"}
+# 
+# 
+# 
+# The results show 1826 rows of duplicate data in the combined data set so we will remove those.
+# 
+# We then created a new table without the duplicate rows.
+# 
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/1ae4f943-e99e-4006-9220-6c5b0d7043c8){width="352"}
+# 
+# **Key Tasks**
+# 
+# -   Checked data for errors
+# 
+# -   Chose tools to work with
+# 
+# -   Transform the data to be worked with effectively
+# 
+# -   Document the cleaning process
+# 
+# **Deliverable**
+# 
+# -   Documenting the manipulation and cleaning process of any data.
+# ---
+# **Analyze**
+# 
+# **Guided Questions**
+# 
+# -   **How should you organize your data to analyze it?**
+# 
+# We went through the process of cleaning the data in Excel, combining the cleaned sheets into BigQuery, then sorting out the duplicate rows of data leaving us with a workable data set.
+# 
+# -   **Has the data been properly formatted?**
+# 
+# The data has been formatted through Excel to make sure the tables all have consistent data types.
+# 
+# \-**What surprises did you find in the data?**
+# 
+# It was surprising to find how many rows contained duplicate data, and the volume of electric rides compared to classic rides was lower than I had anticipated.
+# 
+# \-**How will these insights help answer the business question?**
+# 
+# These insights will help to guide us through our analysis and help us understand better what the end user is looking for, which will lead to a well targeted marketing strategy.
+# 
+# ## SQL Queries and Analysis
+# 
+# Let's start by checking how many rides each type of rider has taken on each bike.
+# 
+# 
+# 
+# ![Total ride per type by rider](https://github.com/motoaddict6/motoaddict6/assets/146842625/0db0c99b-9ffb-4d10-915d-5d49635a50f2){width="358"}
+# 
+# 
+# 
+# ![Ride Type Results](https://github.com/motoaddict6/motoaddict6/assets/146842625/37eded8f-15cb-48f7-a4b2-9077006a2c3c){width="329"}
+# 
+# 
+# 
+# We can now see that the the classic bikes are used 6.04% more than the electric bikes with membership riders, where the electric bikes are used 30.72% more than the classic bikes by casual riders.
+# 
+# We then want to look at the trips per month for each rider type to get an understanding of when they are using the bikes the most throughout the year.
+# 
+# 
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/2bbfc401-0b12-4ca9-97cb-1f396882c0ec){width="347"}
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/a84061a3-ff1a-4c39-9353-4861a556bc24){width="461"}
+# 
+# 
+# 
+# Then we do the same for the day of the week.
+# 
+# 
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/f62fa68d-8c3a-407b-98c3-389bdc2afb54){width="354"}
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/0c985dd3-8e19-4dd7-a278-be7cc2820167){width="430"}
+# 
+# 
+# Then we calculate the average ride time, per rider type.
+# 
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/81ac3b9e-c895-46c1-85b7-573001bf9486){width="412"}
+# 
+# ![](https://github.com/motoaddict6/motoaddict6/assets/146842625/09767e4a-f80c-428f-9d77-566c807e3266){width="307"}
+# 
+# 
+# 
+# **Key Tasks**
+# 
+# -   Aggregate your data so it is useful and accessible
+# 
+# -   Organize and format the data for calculations
+# 
+# -   Preform calculations to identify trends and relationships
+# 
+# \*\* Deliverable\*\*
+# 
+# Summary of analysis:
+# 
+# In organizing the data, we were able to see that casual riders rented the electric bikes at a much higher ratio to classic bikes than *Cyclistic Members* did. We can also see from the daily ride chart that casual riders ride much more on the weekends than during the weekdays, which suggests that they are using the bikes for recreational use, where the members are consistent through the week, suggesting they are using the bikes for commute to and from work.
+# 
+# Both rider types have the highest ridership during the summer months, and both drop off in the winter time. Chicago weather will be the biggest factor for this.
+# 
+# The average ride time for casual riders is nearly double that of the *Cyclistic Member* rides, which provides an opportunity for a targeted marketing strategy.
+# 
+# These findings can lead us to a few conclusions. The casual riders ride nearly 2x longer, but less frequently then the *Cyclistic Members*. They increase ridership on the weekend and most in the summer months. They prefer using the electric bikes to do this recreational riding over the classic bikes.
+# ---
+# **Act**
+# 
+# **Guided Questions**
+# 
+# -   How can your team and business apply your insights?
+# 
+# We can use the insights gained from this analysis to form a precision marketing approach to turn casual riders into *Cyclistic Members*.
+# 
+# -   Is there additional data you could use to expand on your findings?
+# 
+# The latitude and longitude columns could provide GPS data for us to look into which routes are being traveled the most, and least, and which locations are the most popular among our riders, possibly opening the door for commercial relationships that would be mutually beneficial.
+# 
+# **Key task**
+# 
+# -   Analyze the data and create visuals to display findings
+# 
+# -   Summarize the analysis
+# 
+# -   Come up with three marketing strategies for the company to move forward with
+# 
+# **Deliverable**
+# 
+# Looking at the analysis, and the conclusions we have drawn from it, I would suggest these three marketing strategies to move *Casual Riders* to become *Cyclistic Members*:
+# 
+# 1.  With casual riders riding more on the weekends, and summer months, create a sales campaign offering discounts for annual memberships to casual riders during these times when they are most active on the app used.
+# 
+# 2.  Team up with local companies in tourist areas that could offer discounts to *Cyclistic Members* and have them displayed on the app, with notifications when a bicycle is near a partner location.
+# 
+# 3.  With casual riders riding longer, and less frequently, showing the average cost per ride compared to a membership price per ride is a great way to display the immediate benefit of moving to the membership plan. Also structuring in a discount for longer rides in the annual membership would be a way to get casual riders to sign up, and members to start riding longer.
+# 
